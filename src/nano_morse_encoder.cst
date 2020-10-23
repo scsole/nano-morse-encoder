@@ -1,0 +1,24 @@
+//Copyright (C)2014-2020 Gowin Semiconductor Corporation.
+//All rights reserved. 
+//File Title: Physical Constraints file
+//GOWIN Version: 1.9.7 Beta
+//Part Number: GW1N-LV1QN48C6/I5
+//Device: GW1N-1
+//Created Time: Sat 10 24 10:20:59 2020
+
+//IO_LOC "signal" 34;
+//IO_PORT "signal" PULL_MODE=UP DRIVE=8;
+IO_LOC "rgb_led[2]" 17;
+IO_PORT "rgb_led[2]" PULL_MODE=UP DRIVE=8;
+IO_LOC "rgb_led[1]" 16;
+IO_PORT "rgb_led[1]" PULL_MODE=UP DRIVE=8;
+IO_LOC "rgb_led[0]" 18;
+IO_PORT "rgb_led[0]" PULL_MODE=UP DRIVE=8;
+IO_LOC "uart_tx" 8;
+IO_PORT "uart_tx" PULL_MODE=UP DRIVE=8;
+IO_LOC "uart_rx" 9;
+IO_PORT "uart_rx" PULL_MODE=UP;
+IO_LOC "rst" 15;
+IO_PORT "rst" PULL_MODE=UP;
+IO_LOC "clk_24" 35;
+IO_PORT "clk_24" PULL_MODE=UP;
