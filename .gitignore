@@ -1,0 +1,4 @@
+*.user
+/impl/*
+!/impl/*.json
+!/impl/pnr/*.cfg
