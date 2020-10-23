@@ -8,7 +8,8 @@
 //
 //
 // Change history:
-//     v01 - AM Morse transmitter with a rather crude 440 Hz square wave
+//      v01 - AM Morse transmitter with a rather crude 440 Hz square wave
+//      v02 - Added synchronous reset
 //
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -16,6 +17,7 @@ module morse_key #(
     TONE_FREQ = 440 // Frequency of the generated tone, default 440 (Hz)
     )(
     input clk_24,           // 24 MHz system clk
+    input rst,              // Synchronous reset, active HI
     input key,              // Signal to be transmitted, active HI
     output reg signal = 0   // Single bit output tone
     );
@@ -33,5 +35,10 @@ module morse_key #(
         end
         else
             counter <= counter + 1;
+
+        if (rst) begin
+            counter <= 0;
+            signal <= 0;
+        end
     end
 endmodule
