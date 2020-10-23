@@ -8,35 +8,47 @@
 //
 //
 // Change history:
-//     v01 - Implemented using lookup tables
+//      v01 - Implemented using lookup tables
+//      v02 - Fixed incorrect lookups
 //
 ///////////////////////////////////////////////////////////////////////////////
 
+// Useful ASCII codes
+`define ZERO 48
+`define NINE 58
+`define UPPER_A 65
+`define UPPER_Z 91
+`define LOWER_A 97
+`define LOWER_Z 122
+
 module ascii_2_morse (
     input clk_24,               // 24 MHz system clk
-    input rst,                  // Reset (sets output to 0)
+    input rst,                  // Synchronous reset, active HI
     input [6:0] ascii_code,     // A 7-bit ASCII code to convert
     output reg [6:0] morse_code,// Corresponding Morse code signals in little-
                                 // endian order. 0 = dot, 1 = dash
     output reg [2:0] morse_len  // The number of signals used in morse_code
     );
 
-    // Useful ASCII codes
-    localparam UPPER_A = 65;
-    localparam UPPER_Z = 90;
-    localparam LOWER_A = 97;
-    localparam LOWER_Z = 122;
-    localparam ZERO = 48;
-    localparam NINE = 58;
-
     // Lookup tables
     // [9:3] = morse_code
     // [2:0] = morse_len
-    reg [9:0] letters [0:25];
     reg [9:0] numbers [0:9];
+    reg [9:0] letters [0:25];
     reg [9:0] punctuation [0:18];
 
     initial begin
+        numbers[0] = {7'b001_1111, 3'd5}; // 0
+        numbers[1] = {7'b001_1110, 3'd5}; // 1
+        numbers[2] = {7'b001_1100, 3'd5}; // 2
+        numbers[3] = {7'b001_1000, 3'd5}; // 3
+        numbers[4] = {7'b001_0000, 3'd5}; // 4
+        numbers[5] = {7'b000_0000, 3'd5}; // 5
+        numbers[6] = {7'b000_0001, 3'd5}; // 6
+        numbers[7] = {7'b000_0011, 3'd5}; // 7
+        numbers[8] = {7'b000_0111, 3'd5}; // 8
+        numbers[9] = {7'b000_1111, 3'd5}; // 9
+
         letters[0]  = {7'b000_0010, 3'd2}; // A
         letters[1]  = {7'b000_0001, 3'd4}; // B
         letters[2]  = {7'b000_0101, 3'd4}; // C
@@ -64,17 +76,6 @@ module ascii_2_morse (
         letters[24] = {7'b000_1101, 3'd4}; // Y
         letters[25] = {7'b000_0011, 3'd4}; // Z
 
-        numbers[0] = {7'b001_1111, 3'd5}; // 0
-        numbers[1] = {7'b001_1110, 3'd5}; // 1
-        numbers[2] = {7'b001_1100, 3'd5}; // 2
-        numbers[3] = {7'b001_1000, 3'd5}; // 3
-        numbers[4] = {7'b001_0000, 3'd5}; // 4
-        numbers[5] = {7'b000_0000, 3'd5}; // 5
-        numbers[6] = {7'b000_0001, 3'd5}; // 6
-        numbers[7] = {7'b000_0011, 3'd5}; // 7
-        numbers[8] = {7'b000_0111, 3'd5}; // 8
-        numbers[9] = {7'b000_1111, 3'd5}; // 9
-
         punctuation[0]  = {7'b000_0000, 3'd7}; // space 32
         punctuation[1]  = {7'b011_0101, 3'd6}; // ! 33
         punctuation[2]  = {7'b001_0010, 3'd6}; // " 34
@@ -96,17 +97,18 @@ module ascii_2_morse (
         punctuation[18] = {7'b010_1100, 3'd6}; // _ 95
     end
 
-    always @(posedge clk_24 or posedge rst) begin
+    always @(posedge clk_24) begin
         if (rst)
             {morse_code, morse_len} <= 10'b0;
-        else if (ascii_code >= UPPER_A && ascii_code <= UPPER_Z)
-            {morse_code, morse_len} <= letters[ascii_code - UPPER_A];
-        else if (ascii_code >= LOWER_A && ascii_code <= LOWER_Z)
-            {morse_code, morse_len} <= letters[ascii_code - LOWER_A];
-        else if (ascii_code >= ZERO && ascii_code <= NINE)
-            {morse_code, morse_len} <= letters[ascii_code - ZERO];
+        else if (ascii_code >= `ZERO && ascii_code < `NINE)
+            {morse_code, morse_len} <= numbers[ascii_code - `ZERO];
+        else if (ascii_code >= `UPPER_A && ascii_code < `UPPER_Z)
+            {morse_code, morse_len} <= letters[ascii_code - `UPPER_A];
+        else if (ascii_code >= `LOWER_A && ascii_code < `LOWER_Z)
+            {morse_code, morse_len} <= letters[ascii_code - `LOWER_A];
         else begin
             case (ascii_code)
+                7'd32   : {morse_code, morse_len} <= punctuation[0];
                 7'd33   : {morse_code, morse_len} <= punctuation[1];
                 7'd34   : {morse_code, morse_len} <= punctuation[2];
                 7'd36   : {morse_code, morse_len} <= punctuation[3];
