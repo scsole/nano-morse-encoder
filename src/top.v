@@ -1,11 +1,11 @@
 ///////////////////////////////////////////////////////////////////////////////
 // vim:set shiftwidth=4 softtabstop=4 expandtab:
-// Sebastian Sole, 2020
 //
 // Module: top.v
 // Project: Nano Morse Encoder
 // Description: Generate Morse code on the Sipeed Tang Nano
 //
+// Author: Sebastian Sole, 2020
 //
 // Change history:
 //      v01 - Initial attempt to receive data using wbuart32 modules
@@ -13,6 +13,25 @@
 //      v03 - Transmit ASCII over serial when decoded for debugging
 //
 ///////////////////////////////////////////////////////////////////////////////
+//
+// Copyright (C) 2020  Sebastian Sole
+//
+// This program is free software; you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation; either version 2 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License along
+// with this program; if not, write to the Free Software Foundation, Inc.,
+// 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+//
+///////////////////////////////////////////////////////////////////////////////
+
 `define ASCII_SPACE 8'd32
 `define SYMBOL_SPACE 2'd1
 `define LETTER_SPACE 2'd3
