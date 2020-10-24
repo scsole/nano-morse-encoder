@@ -41,7 +41,7 @@
 module top (
     input clk_24,               // 24 MHz system clk
     input rst_n,                // System reset
-    input uart_rx,              // UART recieve port
+    input uart_rx,              // UART receive port
     output uart_tx,             // UART transmit port, only used to transmit the
                                 // rx_ready value back to the connected device 
                                 // for debugging purposes
@@ -52,8 +52,8 @@ module top (
                                 // buffer will be empty.
 );
 
-    wire rx_ready;      // Data recieved successfully
-    wire [7:0] rx_data; // Actual data recieved
+    wire rx_ready;      // Data received successfully
+    wire [7:0] rx_data; // Actual data received
 
     reg tx_ready;       // Data is ready to be transmitted
     reg [7:0] tx_data;  // Actual data to be transmitted
@@ -69,7 +69,7 @@ module top (
     reg signal_state = 0;    // The Morse code output state used to modulate signals
     reg[1:0] delay_time = 0; // The number of units to wait before changing state
 
-    reg [23:0] counter = 0; // 24-bit counter, gives roughtly 700 ms @ 24 MHz
+    reg [23:0] counter = 0; // 24-bit counter, gives roughly 700 ms @ 24 MHz
 
     localparam PERIOD = 50;                   // Duration of a dot in ms
     localparam CLK_DIVIDER = 24_000 * PERIOD; // 20 Hz clk for 50 ms period
@@ -79,7 +79,7 @@ module top (
         if (counter == CLK_DIVIDER) begin
             counter <= 0;
 
-            // Wait for a dot or dash to complete, or untill the buffer has new data
+            // Wait for a dot or dash to complete, or until the buffer has new data
             if (delay_time == 0 && mem_rw_addr != mem_rd_addr) begin
 
                 if (morse_index == morse_len) begin
@@ -113,7 +113,7 @@ module top (
 
         end else begin
             counter <= counter + 1;
-            tx_ready <= 0; // Reset tx_ready (as the caracter would have started or finished transmitting)
+            tx_ready <= 0; // Reset tx_ready (as the character would have started or finished transmitting)
         end
 
         if (~rst_n) begin
@@ -132,7 +132,7 @@ module top (
     // 8-bit word, one stop bit, no parity and 9600 baud over a 24 MHz clock
     reg [30:0] setup = {7'b1000000, 24'd2500};
 
-    // Connect UART modules withouth worying about error handling, simple but not roboust
+    // Connect UART modules without worrying about error handling, simple but not robust
     rxuart rx0(
         .i_clk(clk_24),
         .i_reset(~rst_n),
@@ -153,7 +153,7 @@ module top (
         .o_uart_tx(uart_tx)
     );
 
-    // Buffer for RX UART module. We can recieve characters much faster than we
+    // Buffer for RX UART module. We can receive characters much faster than we
     // transmit them as Morse code. Hence we need a FIFO data buffer. Since we
     // transmit far slower than the UART module can handle, we can use it
     // without one.

@@ -42,7 +42,7 @@ module morse_key #(
 
     localparam COUNTER_MAX = 12_000_000 / TONE_FREQ;
 
-    // 24-bit counter, gives roughtly 0.7s
+    // 24-bit counter, gives roughly 0.7s
     reg [23:0] counter = 0;
 
     always @(posedge clk_24) begin

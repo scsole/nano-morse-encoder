@@ -38,9 +38,9 @@ module buffer (
     input i_rst,                    // Synchronous reset, active HI
     input i_rw,                     // Pulse HI to write i_data at o_rw_addr
     input [10:0] i_rd_addr,         // Read address
-    input [7:0] i_data,              // Data to store when at o_rw_addr
+    input [7:0] i_data,             // Data to store when at o_rw_addr
     output reg [10:0] o_wr_addr,    // The next address that will be written to
-    output [6:0] o_rd_data         // Data located at i_rd_addr
+    output [6:0] o_rd_data          // Data located at i_rd_addr
 );
 
     wire [31:0] d_out;      // Data retrieved from memory
